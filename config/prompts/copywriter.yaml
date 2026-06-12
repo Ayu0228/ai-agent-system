@@ -1,0 +1,43 @@
+# Copywriter Agent Prompt 模板
+prompts:
+  article:
+    template: |
+      撰写一篇关于 "{{topic}}" 的文章
+      目标受众: {{audience}}
+      篇幅: {{length}}字左右
+      风格: {{style}}
+      要求:
+      - 有吸引力的标题
+      - 导语点明核心价值
+      - 正文结构清晰，有数据/案例支撑
+      - 结尾有总结或行动建议
+
+  report:
+    template: |
+      撰写一份关于 "{{topic}}" 的报告
+      格式要求:
+      - 执行摘要 (3 句话)
+      - 背景与现状
+      - 核心发现
+      - 数据支撑
+      - 建议与下一步
+
+  social_post:
+    template: |
+      为 "{{topic}}" 撰写社交媒体帖子
+      平台: {{platform}}
+      风格: {{style}}
+      要求:
+      - 3 秒内抓住注意力
+      - 包含互动引导
+      - 适配平台特性 (字数、格式、话题标签)
+
+  daily_report:
+    template: |
+      基于以下分析结果撰写每日简报
+      分析数据: {{analysis}}
+      格式:
+      # 标题
+      ## 核心要点 (3-5 条)
+      ## 详细分析
+      ## 明日关注

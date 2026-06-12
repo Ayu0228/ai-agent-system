@@ -1,0 +1,76 @@
+# 每日数据采集流水线
+workflow:
+  name: daily-collect
+  version: "1.0"
+  description: "每日自动采集行业数据并生成日报"
+  trigger:
+    type: schedule
+    config:
+      cron: "0 8 * * *"
+
+  params:
+    topic:
+      type: string
+      required: true
+      default: "AI Agent"
+    industry:
+      type: string
+      required: false
+      default: "人工智能"
+
+  steps:
+    - id: collect_news
+      name: "采集新闻"
+      agent: researcher
+      type: task
+      config:
+        prompt: "搜索 {{industry}} 行业过去 24 小时的新闻，提取标题、来源、摘要"
+        tools: [web_search, web_fetch]
+        timeout: 300
+        retry:
+          max_attempts: 2
+          backoff: exponential
+
+    - id: collect_data
+      name: "采集数据"
+      agent: data-analyst
+      type: task
+      config:
+        prompt: "获取 {{industry}} 相关的公开数据指标"
+        tools: [web_search, bash]
+        timeout: 300
+
+    - id: analyze
+      name: "数据分析"
+      agent: data-analyst
+      type: task
+      depends_on: [collect_news, collect_data]
+      input:
+        news: "$collect_news.output"
+        data: "$collect_data.output"
+      config:
+        prompt: "基于采集的新闻和数据，提取关键洞察和趋势"
+        timeout: 120
+
+    - id: write_report
+      name: "撰写日报"
+      agent: copywriter
+      type: task
+      depends_on: [analyze]
+      input:
+        analysis: "$analyze.output"
+      config:
+        prompt: "基于分析结果撰写每日简报，格式：标题 + 3-5 条核心要点 + 详细分析"
+        timeout: 120
+
+    - id: quality_check
+      name: "质量判断"
+      type: condition
+      depends_on: [write_report]
+      config:
+        expression: "$quality_check.output.condition_met"
+        then: ""
+        else: ""
+
+  outputs:
+    report: "$write_report.output"

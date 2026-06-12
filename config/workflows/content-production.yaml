@@ -1,0 +1,86 @@
+# 内容生产流水线
+workflow:
+  name: content-production
+  version: "1.0"
+  description: "从选题到发布的内容生产流水线"
+  trigger:
+    type: manual
+
+  params:
+    topic:
+      type: string
+      required: true
+    format:
+      type: string
+      required: false
+      default: "article"
+
+  steps:
+    - id: strategy
+      name: "内容策划"
+      agent: content-strategist
+      type: task
+      config:
+        prompt: "基于 {{topic}} 生成内容策划方案，包含角度、大纲、目标受众"
+
+    - id: research
+      name: "调研采集"
+      agent: researcher
+      type: task
+      depends_on: [strategy]
+      config:
+        prompt: "根据策划方案采集相关资料和数据"
+
+    - id: draft
+      name: "初稿撰写"
+      agent: copywriter
+      type: task
+      depends_on: [research]
+      input:
+        plan: "$strategy.output"
+        research: "$research.output"
+      config:
+        prompt: "根据策划方案和调研资料撰写初稿"
+
+    - id: review
+      name: "内容审核"
+      agent: product-designer
+      type: task
+      depends_on: [draft]
+      config:
+        prompt: "审核内容质量，输出评分(0-1)和改进建议"
+
+    - id: quality_check
+      name: "质量判断"
+      type: condition
+      depends_on: [review]
+      config:
+        expression: "$review.output.data.score >= 0.7"
+        then: "visual_design"
+        else: "revise"
+
+    - id: revise
+      name: "内容修改"
+      agent: copywriter
+      type: task
+      depends_on: [quality_check]
+      input:
+        draft: "$draft.output"
+        feedback: "$review.feedback"
+      config:
+        prompt: "根据审核反馈修改内容"
+
+    - id: visual_design
+      name: "视觉设计"
+      agent: visual-designer
+      type: task
+      depends_on: [quality_check]
+      config:
+        prompt: "为内容设计配图方案"
+
+    - id: final_approval
+      name: "终审发布"
+      agent: main
+      type: human
+      depends_on: [visual_design, revise]
+      config: {}

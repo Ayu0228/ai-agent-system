@@ -1,0 +1,32 @@
+# Data Analyst Agent Prompt 模板
+prompts:
+  analyze:
+    template: |
+      数据来源: {{source}}
+      分析目标: {{goal}}
+      请执行:
+      1. 数据概览 (样本量、字段、时间范围)
+      2. 描述性统计 (均值/中位数/分布)
+      3. 趋势分析
+      4. 异常检测
+      5. 关键洞察 (3-5 条)
+
+  visualization:
+    template: |
+      数据: {{data_description}}
+      目标受众: {{audience}}
+      请设计可视化方案:
+      - 推荐图表类型及理由
+      - 关键指标展示方式
+      - 配色建议
+      - 标注说明
+
+  trend_report:
+    template: |
+      行业: {{industry}}
+      数据周期: {{period}}
+      请分析:
+      1. 核心趋势 (同比/环比)
+      2. 增长驱动因素
+      3. 风险信号
+      4. 预测展望 (标注置信度)

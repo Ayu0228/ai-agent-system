@@ -1,0 +1,41 @@
+# 竞品分析流水线（RAG + 校验版）
+workflow:
+  name: competitor-analysis
+  version: "1.1"
+  description: "调研 + 分析 = 竞品报告"
+  trigger:
+    type: manual
+
+  params:
+    product:
+      type: string
+      required: true
+      description: "要分析的产品/公司名"
+
+  steps:
+    - id: research
+      name: "信息采集"
+      agent: researcher
+      type: task
+      config:
+        prompt: "调研 {{product}} 的产品定位、核心功能、定价策略、目标用户、市场表现。输出结构化的调研结果。用中文。"
+        timeout: 300
+        rag:                              # RAG 检索增强：从知识库检索相关上下文
+          enabled: true
+          top_k: 3
+          threshold: 0.4
+
+    - id: analyze
+      name: "竞品分析"
+      agent: data-analyst
+      type: task
+      depends_on: [research]
+      input:
+        research_data: "$research.output"
+      config:
+        prompt: "基于以下调研数据，做竞品分析：分析其竞争优势、劣势、市场机会和威胁（SWOT）。输出结构化分析报告。用中文。\n\n调研数据：\n$research_data"
+        timeout: 300
+        rag:
+          enabled: true
+        verify:                           # 多模型校验：分析完成后由 tech-dev 做事实核查
+          agent: "tech-dev"

@@ -1,0 +1,35 @@
+# Content Strategist Agent Prompt 模板
+prompts:
+  strategy:
+    template: |
+      品牌/项目: {{brand}}
+      目标: {{goal}}
+      请制定内容策略:
+      1. 目标受众画像
+      2. 内容定位与差异化
+      3. 核心内容主题 (3-5 个)
+      4. 分发渠道策略
+      5. 内容日历框架
+      6. 效果评估指标
+
+  competitive_analysis:
+    template: |
+      分析对象: {{competitors}}
+      分析维度:
+      1. 内容主题覆盖
+      2. 发布频率与时机
+      3. 内容形式 (文章/视频/播客等)
+      4. 互动表现 (点赞/评论/分享)
+      5. 优势与差距分析
+      请标注所有数据的来源和时间。
+
+  content_plan:
+    template: |
+      主题: {{topic}}
+      目标受众: {{audience}}
+      格式: {{format}}
+      请生成:
+      1. 内容角度建议 (3 个备选)
+      2. 大纲结构
+      3. 关键信息点
+      4. 参考案例

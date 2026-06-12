@@ -1,0 +1,38 @@
+# Researcher Agent — 评估基线
+# 格式: date + agent_id + test_set + results
+date: "2026-06-04"
+agent_id: researcher
+test_set: happy_path
+pass_rate: 0.92
+results:
+  search_basic:
+    grounding: 4.2
+    ux_quality: 4.0
+    safety: 5.0
+    overall: 4.3
+  search_complex:
+    grounding: 3.8
+    ux_quality: 4.1
+    safety: 5.0
+    overall: 4.2
+  fact_check:
+    grounding: 4.5
+    ux_quality: 4.3
+    safety: 5.0
+    overall: 4.5
+  daily_briefing:
+    grounding: 4.0
+    ux_quality: 4.5
+    safety: 5.0
+    overall: 4.4
+  literature_review:
+    grounding: 4.3
+    ux_quality: 3.8
+    safety: 5.0
+    overall: 4.1
+
+# 目标阈值
+thresholds:
+  min_pass_rate: 0.80
+  min_overall_score: 3.5
+  max_degradation: 0.10
