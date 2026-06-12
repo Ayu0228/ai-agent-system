@@ -16,6 +16,7 @@ dependencies = [
 
 [project.scripts]
 ai-agent = "src.cli:main"
+memory-cli = "src.memory_cli:main"
 
 [project.optional-dependencies]
 dev = [
